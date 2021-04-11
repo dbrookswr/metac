@@ -1,0 +1,498 @@
+\documentclass[man,mask]{apa6}
+%\documentclass[man,floatsintext]{apa6}
+%\documentclass[doc,floatsintext]{apa6}
+\usepackage{graphicx,psfrag,epsf}
+\usepackage{enumerate} 
+\usepackage{setspace}
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+\usepackage{apacite}
+\usepackage{natbib}
+\bibliographystyle{apacite}
+\usepackage[none]{hyphenat}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{wrapfig}
+\usepackage{marvosym}
+\usepackage{enumitem}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{changepage}
+\usepackage{amssymb}
+\usepackage{lineno}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{multicol}
+\setlength{\bibsep}{0pt plus 0.3ex}
+\title{Rating a Subset of Items in Comparison to a Superset}
+\shorttitle{Subset Rating}
+\author{Daniel B.~Wright}
+\authornote{\noindent email: \texttt{dwright@aldergse.org} or \texttt{dbrookswr@gmail.com}. \\ 
+\indent The \LaTeX{} and \textsf{R} code \citep[in a single \textbf{knitr} file,][]{knitr} used to create the submitted manuscript and conduct all reported analyses are available from the author. Also available are the raw data and a document used to transform the Qualtrics data into the format used for analyses (with some exploratory analysis). This research is part of US Department of Education Supporting Effective Educator Development (SEED) grant. 
+}
+\leftheader{Wright}
+\keywords{estimating effectiveness, judgement, ratings, subset}
+\affiliation{Alder Graduate School of Education}
+
+\abstract{What happens when people are ask to rate only a subset of items? Does rating only a subset of items produce biased values compared with rating all the items? Nine hundred and seventy participants were asked to provide comparison ratings for a subset (1, 2, 3, 4, 5, or all 10) of pieces of art from a set of ten pieces. Participants' ratings of these subsets were similar to when rating all items. There was a small negative bias when rating only one piece, but overall mean ratings for all conditions were near the scales' mid-points. The results are encouraging. They suggest that researchers may be able to have participants rate only a subset of items, instead of having to rate all the items, without negatively affecting results (with some caution if participants are rating only one item). }
+\begin{document}
+\maketitle
+
+What happens when someone is asked to make ratings about a small subset of items in comparison with the larger superset from which the subset is drawn? Do they tend to rate this subset higher or lower than if they had rated all the items? This is an important applied question because academic and marketing researchers often want to know how people feel about a large number of items, but asking people about all of these items would be impractical. 
+
+
+There are several applications where people are only asked about a subset of items. For example, in market research often a company wants to know respondents' opinions about dozens of products, but knows that asking about each would greatly lengthen the survey and cause respondent fatigue. The literature is mixed about how long a survey can be before substantial fatigue negatively affects results \citep[e.g.,][]{BradleyDaly1994,HessEA2012}. For some psychology studies the numbers of stimuli that are of interest can be substantial. For example, if wanting to present several scenarios which systematically vary on say five dimensions each with four possible values, the total number of scenarios is $5^4 = \Sexpr{5^4}$. In these cases fractional factorial designs \citep[see][Chapters 6--7]{BoxEA2005} are used so that each respondent is presented with a reasonable number of scenarios to judge and together the analyst can still estimate main effects and interactions that were deemed important, but the estimation of other interactions is confounded. 
+
+
+Two rating procedures are used in the current study. These are: having participants provide ranks $1\dots n$ for the item and having them rate the stimuli on a 0--100 scale. There have been several arguments in preference for each of these approaches. Some are theoretical based on the cognitive tasks required \citep[e.g.,][]{KleinEA2004} and some based on large scale surveys \citep[e.g.,][]{AlwinKrosnick1985}. \citeauthor{AlwinKrosnick1985} compared these procedures using the General Social Survey and found the two produced the same general orderings of preferences. \citet{RussellGray1994} compared rankings and ratings using pieces of art. They found the two produced similar results. Here these two procedures are used to test for the generality of the main results. Following \citeauthor{RussellGray1994}, pieces of abstract art are used in the current study. 
+
+The study was conducted online using the Qualtrics software (\url{qualtrics.com}). The sample was recruited and compensated using Amazon's Mechanical Turk (MTurk). Several studies have compared the results of studies using MTurk and laboratory methods \citep{CrumpEA2013}. While some differences occur, an oft-cited conclusion is that ``the data obtained are at least as reliable as those obtained via traditional methods'' \citep[p.~3]{BuhrmesterEA2011}. The design of the current study followed guidelines for effective MTurk use by behavioral scientists \citep[e.g.,][]{MasonSuri2012,SheehanPittman2016}. MTurk is particularly well-suited when needing a large sample of people to do a brief task.
+
+\subsection{Research Questions}
+\begin{description}[noitemsep, nosep,style=unboxed,leftmargin=0cm]
+\item{\noindent There are two main research questions (RQs). When evaluating these both the unadjusted and the Holm adjusted $p$-values (for these two) will be reported.}
+\begin{enumerate}[noitemsep, nosep, align=left, label={\hspace{.5cm}RQ \arabic*}]
+\item \label{rq:somevall} {Is there a main effect difference depending on whether participants rate a subset (size: 1, 2, 3, 4, 5) of items or all ten of the items?}
+\item \label{rq:onevrest} Is there a difference between rating just one item versus rating a subset of multiple items?
+\end{enumerate}
+\item{\noindent There are several additional ancillary research questions. While these are not central to the focus of the study, they are valuable to report.}
+\begin{enumerate}[noitemsep, nosep, resume*, label={\hspace{.5cm}RQ \arabic*}]
+\item \label{rq:overall} Overall, is the mean response at the mid-points for the scales?
+\item \label{rq:scale} Is there a main effect of scale, with one of the approaches (ranking and rating) producing higher or lower estimates (after the responses have been put on the same scale)?
+\item \label{rq:numitems} Does the accuracy of the ratings vary by whether 2, 3, 4, or 5 items are rated?
+\end{enumerate}
+\item{\noindent The final set of hypotheses concern interactions and the generality of any results found above.}
+\begin{enumerate}[noitemsep, nosep, resume*, label={\hspace{.5cm}RQ \arabic*}]
+\item \label{rq:somevallbyscale} Is there an interaction between scale and the subset versus rating all conditions?
+\item \label{rq:onevrestbyscale} Is there an interaction between scale and whether one or several items of a subset are rated?
+\item \label{rq:numitemsbyscale} Does the scale moderate any of the effects found in \#\hspace{-.5cm}\ref{rq:numitems}?
+\item Are there demographics differences \dots
+\begin{enumerate}[noitemsep, nosep, label={\alph*.}]
+\item \label{rq:age} by age (main effects and interactions)?
+\item \label{rq:educ} by education level (main effects and interactions)?
+\item \label{rq:gender} by gender (main effects and interactions)?
+\end{enumerate}
+\end{enumerate}
+\end{description}
+
+
+<<readCSV,echo=FALSE>>=
+data1 <- read.csv("C:\\Users\\dwright\\Documents\\SEED\\ArtRatings_Nov2818.csv")
+dupsips <- sum(duplicated(data1$IPAddress))
+data1 <- data1[duplicated(data1$IPAddress)==FALSE,]
+# data1 <- data1[data1$Finished==TRUE,] #all did
+tooquick <- sum(data1[,6] < 20)
+numer <- nrow(data1)
+data1 <- data1[data1[,6] >= 20,]
+suppressPackageStartupMessages(require(qdap))
+firstup <- function(x) {
+   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+   return(x)
+}
+firstdown <- function(x) {
+   substr(x, 1, 1) <- tolower(substr(x, 1, 1))
+   return(x)
+}
+@
+
+\section{Methods}
+\subsection{Sample}
+The sample size was chosen based on the power to detect two effects (\hspace{-.5cm}\ref{rq:somevall} and \hspace{-.5cm}\ref{rq:onevrest}) if they are small in Cohen's (\citeyear{Cohen1992}) terms ($.2\sigma$). The critical $\alpha$ level for the power analysis was set to .025 because a conservative approach (Bonferroni's method) to adjusting for multiple $p$-values is dividing by the number of tests, here two. In the results section Holm's method will be used since it is maintains familywise Type I error, but is more powerful than Bonferroni's method. Different statistical procedures will be used, but to give an approximate suggestion for an appropriate sample size G*Power \citep{GPower} for comparing two independent means estimated that a sample of 954 would achieve 80\% power (the \textsf{R} command \verb!power.t.test(delta = .2,sig.level=.025,power=.8)! can also be used). Given the likelihood that some data would need to be excluded one thousand participants were recruited. 
+
+The study was published on Amazon Mechanical Turk (AMT) on Tuesday, November 27, 2018. Following the guidelines from \citet{SheehanPittman2016}, only people 18 years of age and over in the US who had successfully completed 500 AMT tasks with a 97\% acceptance rate\footnote{\label{ft:accept}AMT allows requesters to review each participant's responses to decide whether to pay them (in AMT terminology to ``accept'' them). If a participant does not spend ample effort on these tasks it is likely the person would have a low acceptance rate so could not have taken part in the current study.} were allowed to sign up. Some responses came from %\Sexpr{firstup(replace_number(dupsips))} had 
+duplicate IP addresses. While the second use of an IP address would be from a different Amazon account (and according to AMT rules from a different person), the people may have talked about the task and therefore the second person was excluded. Some (\Sexpr{tooquick}, or \Sexpr{sprintf("%2.2f",100*tooquick/numer)}\%) of the remaining participants responded faster than 20 seconds and were excluded, though still paid. The final sample size is \Sexpr{nrow(data1)}. 
+
+Characteristics of typical AMT samples are discussed in many sources. \citet[Ch.~2]{SheehanPittman2016} summarize much of this research: AMT samples tend to be younger than the general population, have a range of education levels, % ((10\% completed high school, 25\% some college, 10\% associates degree, 35\% bachelor's degree, 15\% masters degrees, and 5\% doctorate-level degree), 
+and approximately half are female. They tend to be more diverse than the typical psychology laboratory sample. Three demographic variables (age, education level, and gender) were asked at the end of this study. Participants in this sample have similar demographics to those reported by \citet[p.~17]{SheehanPittman2016}. Participants were asked for their year of birth. Binning these into decades: 
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.1 > 1939 & data1$Q11.1 < 1950,na.rm=TRUE))}\% were born in the 1940s,
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.1 > 1949 & data1$Q11.1 < 1960,na.rm=TRUE))}\% in the 1950s,
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.1 > 1959 & data1$Q11.1 < 1970,na.rm=TRUE))}\% in the 1960s,
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.1 > 1969 & data1$Q11.1 < 1980,na.rm=TRUE))}\% in the 1970s,
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.1 > 1979 & data1$Q11.1 < 1990,na.rm=TRUE))}\% in the 1980s, and
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.1 > 1989 & data1$Q11.1 < 2000,na.rm=TRUE))}\% in the 1990s.
+Participants reported their education level:
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.2 == levels(data1$Q11.2)[2],na.rm=TRUE))}\% had an \Sexpr{firstdown(levels(data1$Q11.2)[2])},
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.2 == levels(data1$Q11.2)[3],na.rm=TRUE))}\% had a \Sexpr{firstdown(levels(data1$Q11.2)[3])},
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.2 == levels(data1$Q11.2)[4],na.rm=TRUE))}\% had a \Sexpr{firstdown(levels(data1$Q11.2)[4])},
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.2 == levels(data1$Q11.2)[5],na.rm=TRUE))}\% had a \Sexpr{firstdown(levels(data1$Q11.2)[5])},
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.2 == levels(data1$Q11.2)[6],na.rm=TRUE))}\% had \Sexpr{firstdown(levels(data1$Q11.2)[6])},
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.2 == levels(data1$Q11.2)[7],na.rm=TRUE))}\% had a \Sexpr{firstdown(levels(data1$Q11.2)[7])},
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.2 == levels(data1$Q11.2)[8],na.rm=TRUE))}\% had a \Sexpr{firstdown(levels(data1$Q11.2)[8])}, and
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.2 == levels(data1$Q11.2)[9],na.rm=TRUE))}\% had \Sexpr{firstdown(levels(data1$Q11.2)[9])}.
+Participants' self-reported genders were:
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.3 == levels(data1$Q11.3)[2],na.rm=TRUE))}\% \Sexpr{firstdown(levels(data1$Q11.3)[2])},
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.3 == levels(data1$Q11.3)[3],na.rm=TRUE))}\% \Sexpr{firstdown(levels(data1$Q11.3)[3])},
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.3 == levels(data1$Q11.3)[4],na.rm=TRUE))}\% \Sexpr{firstdown(levels(data1$Q11.3)[4])}, and
+\Sexpr{sprintf("%2.2f",100*mean(data1$Q11.3 == levels(data1$Q11.3)[5],na.rm=TRUE))}\% ticked ``\Sexpr{firstdown(levels(data1$Q11.3)[5])}.''
+
+<<ratingcolumnnames,echo=FALSE>>=
+colnames(data1)[18:197] <- paste0(rep(c("S","R"),each=90),
+      rep(rep(c("1a","1b","1c","2a","2b",3,4,5,10),each=10),2),".",rep(0:9,18))
+whichnisna <- function(x) names(x)[which.min(is.na(x))]
+data1$condition <- sub("\\.[0-9]","",apply(data1[,18:197],1,whichnisna))
+@
+
+<<makeuniv1,echo=FALSE>>==
+suppressPackageStartupMessages(require(multilevel))
+dvlist <- list(seq(18,188,10),seq(19,189,10),seq(20,190,10),
+    seq(21,191,10),seq(22,192,10),seq(23,193,10),seq(24,194,10),
+    seq(25,195,10),seq(26,196,10),seq(27,197,10))
+names(dvlist) <- paste0("item",1:10)
+condname <- paste0(rep(c("S","R"),each=9),rep(c(1,1,1,2,2,3,4,5,9),2))
+data2 <- mult.make.univ(data1,dvlist,outname=condname,tname="COND")
+data2 <- data2[,-(18:197)]
+data2 <- data2[rowSums(is.na(data2[,24:33]))<10,]
+@
+
+<<createconditionvariables,echo=FALSE>>=
+data2$scale <- substr(data2$condition,start=1,stop=1)
+data2$numitems <- rowSums(is.na(data2[,24:33])==FALSE)
+data2 <- subset(data2,select=-c(condition,COND))
+@
+
+\subsection{Stimuli}
+There is a large amount of social psychology research about how person ratings can be affected by non-diagnostics aspects of the person descriptions \citep[e.g.,][]{FiskeNeurberg2010}. Instead of rating people, following \citet{RussellGray1994}, participants rated pieces of abstract art. Ten pieces, all created by the same artist (Soni Wright, \url{www.ojaistudioartists.org/soni-wright}), were chosen and are shown in Figure~\ref{fig:tenart}. None of these pieces were displayed in juried shows outside of Southern California and none of the participants are likely to have seen any of them.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=.8\linewidth,trim={0 -.3cm 0cm -.5cm},clip]{art10hidef.jpg}
+\caption{\vspace{1cm}The ten pieces of art that were used for this study. (\emph{courtesy of Soni Wright})}
+\label{fig:tenart}
+\end{figure}
+
+
+
+\subsection{Procedure}
+Participants were recruited on AMT and if they agreed they went to the Qualtrics survey (housed on a Qualtrics server). The first screen thanked them for volunteering and displayed the ten pieces of art. The next screen showed participants these ten again and one of them (chosen at random) to compare with the whole set. A random half (\Sexpr{sprintf("%2.2f",100*mean(data2$scale == "R",na.rm=TRUE))}\%) were asked to provide an integer from 1--10 corresponding to whether the piece of art was the best (\#1), the worst (\#10), and so on. The system required that participants entered an integer before allowing them to progress. Half (\Sexpr{sprintf("%2.2f",100*mean(data2$scale == "S",na.rm=TRUE))}\%) were asked to do this on a 0--100 rating scale with numeric labels at each ten-points, the words ``Worst'' and ``Best'' at the two extremes, and ``Average'' at the midpoint. Participants moved a bar, which started at the midpoint, to the their desired location. The system required that the participant moved the bar before progressing.Participants were randomly allocated to rate 1, 2, 3, 4, 5, or 10 pieces of art, with three times as many sampled to see just one piece, and twice as many to see just two pieces. This over-sampling was because participants rating only one or two pieces of art provide less information than those rating more pieces of art. Thus, this is a $2 \times 6$ unbalanced between subject design. The choice of which art pieces to display and the order in which to display them were based on Qualtrics in-built randomizer.
+
+After completing the ratings participants answered the three demographic questions (year of birth, highest education level, and gender). They were thanked and given a code to use on the AMT webpage to get paid. Payment was \$0.50. This was based on a conservative estimate for the amount of time (three minutes) to complete the task and \citeauthor{SheehanPittman2016}'s (\citeyear{SheehanPittman2016}) guidelines of paying \$0.15 per minute. \Sexpr{firstup(replace_number(round(100* mean(data1[,6]<180))))} percent of those rating ten items finished in less than three minutes. All participants were paid. This study was approved by the Alder Institutional Review Board.
+
+\section{Results}
+<<makedata3,echo=FALSE>>=
+data3 <- make.univ(data2,dvs=data2[,22:31],outname="resp",tname="itemNo")
+data3 <- data3[,-(22:31)]
+data3 <- data3[is.na(data3$resp)==FALSE,]
+data3$all <- data3$numitems == 10
+@
+
+<<of10,echo=FALSE>>=
+rank10 <- data3[data3$scale=="R" & data3$numitems==10,]
+all10 <- function(x) length(unique(x))==length(x)
+atleast7 <- function(x) length(unique(x)) >= length(x)-3
+allten <- 100*mean(tapply(rank10$resp,rank10$MTurkCode,all10))
+atlseven <- 100*mean(tapply(rank10$resp,rank10$MTurkCode,atleast7))
+@
+
+
+
+<<ct,echo=FALSE>>=
+items <- data2[,22:31]
+ct <- cor.test(colMeans(items[data2$scale=="S",],na.rm=TRUE),
+            10-colMeans(items[data2$scale=="R",],na.rm=TRUE))
+@
+%it original started just as the default ... I would no longer call it ugly
+<<uglyplots,fig.cap="Item means (raw values) scatter plot between the ranking and scale procedures.",fig.width=5,fig.height=4,out.width="5in",out.height="4in",fig.align='center',echo=FALSE,eval=FALSE>>=
+suppressPackageStartupMessages(require(plotrix))
+#I've reverse scored the R data
+plot(colMeans(items[data2$scale=="S",],na.rm=TRUE),
+     10-colMeans(items[data2$scale=="R",],na.rm=TRUE),
+     xlab="Scale",ylab="Ranking (reversed)",
+     xlim=c(26,74),ylim=c(2.6,7.4),las=1,yaxt='n',xaxt='n')
+axis(2,3:7,7:3,las=1)
+axis(1,seq(30,70,10),seq(30,70,10),las=1)
+axis.break(axis=1,27,style="zigzag",brw=0.04)
+axis.break(axis=1,72.5,style="zigzag",brw=0.04)
+axis.break(axis=2,2.7,style="zigzag",brw=0.04)
+axis.break(axis=2,7.25,style="zigzag",brw=0.04)
+#abline(lm(c(10,1)~c(100,0)),lty=2)
+#lines(c(58,55.3),c(4.1,4.65))
+arrows(58,4.1,55.3,4.65,length=.05)
+text(58.5,4.1,"two\npoints",pos=1)
+@
+
+
+
+\subsection{Descriptive Statistics}
+To compare responses on the two scales, responses on each were transformed so that -1 corresponds to the lowest possible rating, 0 to the mid-point, and +1 to the highest possible rating. The distributions for all twelve conditions are shown in Figure~\ref{fig:dists}.
+
+<<stresponse,echo=FALSE>>=
+data3$stresp <-
+   -1*(data3$scale == "R")*(data3$resp - 5.5)/4.5 +
+   (data3$scale == "S")*(data3$resp - 50)/50 
+@
+
+<<dists,fig.cap="Distributions of standardized responses for the twelve conditions. The R (ranking) and S (scale) show which rating procedure was used and the numbers shows how many items were rated (or if all ten were rated).",fig.width=6,fig.height=3.2,out.width="6in",out.height="3.2in",fig.align='center',echo=FALSE>>=
+par(mfrow=c(2,6))
+par(mar=c(3,.5,3,.5))
+data3$numitemsX <- data3$numitems
+data3$numitemsX[data3$numitems==10] <- "All"
+data3$cond <- paste0(data3$scale,"_",data3$numitemsX)
+conds <- sort(unique(data3$cond))
+for (i in 1:12){
+hist(data3$stresp[data3$cond == conds[i]],col="grey85",
+     bty='n',yaxt='n',xaxt='n',main=conds[i],font.main=1,
+     cex.main=1,xlab="",ylab="")
+axis(1,-1:1,-1:1)   
+}
+@
+
+<<echo=FALSE>>=
+suppressPackageStartupMessages(require(boot))
+suppressPackageStartupMessages(require(lme4))
+@
+
+<<valsfortabmeans,cache=TRUE,echo=FALSE,message=FALSE>>=
+#This first part is easy
+tabx <- with(data3,tapply(stresp,list(scale,numitems),mean))
+#R small since just comparing
+#cix <- function(x) boot.ci(boot(x,
+#           function(x,i) mean(x[i]),1000),type="bca")$bca[4:5]
+#tabxci <- unlist(with(data3, 
+#    tapply(resp,list(scale,numitems),cix)))
+#tabxci <- unlist(with(data3,
+#    tapply(stresp,list(scale,numitems),cix)))
+data3$conds <- paste0(data3$scale,data3$numitems)
+modCI <- with(data3,lmer(stresp ~ 0 + conds +(1|MTurkCode)))
+set.seed(3302)
+cis <- confint(modCI,method="boot",nsim=10000,quiet=TRUE)
+@
+
+
+<<valsfortabvar,cache=TRUE,echo=FALSE>>=
+tabxvar <- with(data3,tapply(stresp,MTurkCode,var))
+matvar <- data.frame(rownames(tabxvar),tabxvar)
+colnames(matvar) <- c("MTurkCode","varvals")
+data3 <- merge(data3,matvar,by="MTurkCode",all.x=TRUE)
+data3$conds <- paste0(data3$scale,data3$numitems)
+vars <- with(data3,tapply(varvals,list(scale,numitems),mean))
+@
+
+\begin{table}
+\caption{Mean values of the standardized responses (mid-point of scale is zero, minimum and maximum are -1 and +1) for the different conditions along with their 95\% confidence intervals found with parametric bootstrap (10,000 replications) using the defaults of the \texttt{confint.merMod} function \citep{lme4}. The final row shows the mean of individual participants' variances (variances rather than standard deviations so that differences among conditions were not an artefact due to the number of items rated).\vspace{.2cm}}
+\label{tab:means}
+\small
+\begin{tabular}{l cccccc}
+& \multicolumn{6}{c}{Number of Ratings} \\ 
+\cline{2-7}
+& 1 & 2 & 3 & 4 & 5 & 10 \\ \cline{2-7}
+%\multirow{2}{*}{Ranks}  
+Ranks & \Sexpr{sprintf("%1.2f",tabx[1,1])}
+& \Sexpr{sprintf("%1.2f",tabx[1,2])}
+& \Sexpr{sprintf("%1.2f",tabx[1,3])}
+& \Sexpr{sprintf("%1.2f",tabx[1,4])}
+& \Sexpr{sprintf("%1.2f",tabx[1,5])}
+& \Sexpr{sprintf("%1.2f",tabx[1,6])} \\
+95\% CIs 
+& (\Sexpr{sprintf("%1.2f",cis[3,1])}, \Sexpr{sprintf("%1.2f",cis[3,2])})
+& (\Sexpr{sprintf("%1.2f",cis[5,1])}, \Sexpr{sprintf("%1.2f",cis[5,2])}) 
+& (\Sexpr{sprintf("%1.2f",cis[6,1])}, \Sexpr{sprintf("%1.2f",cis[6,2])})
+& (\Sexpr{sprintf("%1.2f",cis[7,1])}, \Sexpr{sprintf("%1.2f",cis[7,2])}) 
+& (\Sexpr{sprintf("%1.2f",cis[8,1])}, \Sexpr{sprintf("%1.2f",cis[8,2])}) 
+& (\Sexpr{sprintf("%1.2f",cis[4,1])}, \Sexpr{sprintf("%1.2f",cis[4,2])}) \\ 
+Vars & * 
+& \Sexpr{sprintf("%1.2f",vars[1,2])}
+& \Sexpr{sprintf("%1.2f",vars[1,3])}
+& \Sexpr{sprintf("%1.2f",vars[1,4])}
+& \Sexpr{sprintf("%1.2f",vars[1,5])}
+& \Sexpr{sprintf("%1.2f",vars[1,6])} 
+\\ \hline 
+
+Scale & \Sexpr{sprintf("%1.2f",tabx[2,1])}
+& \Sexpr{sprintf("%1.2f",tabx[2,2])}
+& \Sexpr{sprintf("%1.2f",tabx[2,3])}
+& \Sexpr{sprintf("%1.2f",tabx[2,4])}
+& \Sexpr{sprintf("%1.2f",tabx[2,5])}
+& \Sexpr{sprintf("%1.2f",tabx[2,6])} \\
+95\% CIs 
+& (\Sexpr{sprintf("%1.2f",cis[9,1])}, \Sexpr{sprintf("%1.2f",cis[9,2])})
+& (\Sexpr{sprintf("%1.2f",cis[11,1])}, \Sexpr{sprintf("%1.2f",cis[11,2])}) 
+& (\Sexpr{sprintf("%1.2f",cis[12,1])}, \Sexpr{sprintf("%1.2f",cis[12,2])})
+& (\Sexpr{sprintf("%1.2f",cis[13,1])}, \Sexpr{sprintf("%1.2f",cis[13,2])}) 
+& (\Sexpr{sprintf("%1.2f",cis[14,1])}, \Sexpr{sprintf("%1.2f",cis[14,2])}) 
+& (\Sexpr{sprintf("%1.2f",cis[10,1])}, \Sexpr{sprintf("%1.2f",cis[10,2])}) \\
+Vars & * 
+& \Sexpr{sprintf("%1.2f",vars[2,2])}
+& \Sexpr{sprintf("%1.2f",vars[2,3])}
+& \Sexpr{sprintf("%1.2f",vars[2,4])}
+& \Sexpr{sprintf("%1.2f",vars[2,5])}
+& \Sexpr{sprintf("%1.2f",vars[2,6])} 
+\\ \hline 
+\multicolumn{7}{p{.99\textwidth}}{\footnotesize{Note. * because each participant in these conditions had only one rating so their standard deviations were not calculated.}}
+\\ \hline
+
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:means} shows the means for the different groups. For the ranking procedure, the point estimates are slightly above zero, but most of the 95\% confidence intervals overlap with zero. For the scale procedure, those rating only one piece had the only negative point estimate. The rest are positive, but all their confidence intervals overlap with zero. The variances are higher for the ranking method and remain relatively stable across the number of items rated for both rating methods.  
+
+\subsection{Inferential Statistics}
+A popular approach for modeling repeated measures data, particularly like these where people rated different art pieces, is as a cross-classified multilevel model, with random variables for both items and people. People rated between 1 and 10 items. Traditional repeated measures ANOVA have difficulty with different numbers of repeated measures, but multilevel models are well-suited for this \citep{Goldstein2011,WrightLondon2009m}. The \texttt{lmer} function from the \textsf{R} package \textbf{lme4} \citep{lme4} will be used for these analyses. Following \citet{Luke2017} and using the \textbf{lmerTest} \citep{lmerTest} package, Satterthwaite approximations will be used for the degrees of freedom to calculate $p$-values of the fixed effects.
+
+<<plot38478,out.height="3cm",echo=FALSE,eval=FALSE>>=
+colnames(data3)[6] <- "rtime"
+rtstud <- tapply(data3$rtime,data3$MTurkCode,mean,na.rm=TRUE)
+numitstud <- tapply(data3$numitems,data3$MTurkCode,mean,na.rm=TRUE)
+plot(jitter(numitstud),rtstud)
+lines(sort(unique(numitstud)),tapply(rtstud,numitstud,mean,tr=.2),col="red")
+
+lmean <- function(x) log(mean(x))
+plot(jitter(numitstud),log(rtstud))
+lines(sort(unique(numitstud)),tapply(rtstud,numitstud,lmean),col="red")
+@
+
+<<plot9029488,echo=FALSE>>=
+suppressPackageStartupMessages(require(lme4))
+suppressPackageStartupMessages(require(splines))
+suppressPackageStartupMessages(require(lmerTest))
+data3$one <- data3$numitems==1
+data3$ni <- data3$numitems
+data3$ni[data3$numitems==1] <- 0
+data3$ni[data3$numitems==10] <- 0
+@
+
+<<models,cache=TRUE,echo=FALSE>>=
+data3$const <- rep(1,length(data3$MTurkCode)) #For Satt p values
+attach(data3,warn.conflicts=FALSE)
+m00 <- lmer(stresp~ -1 + (1|MTurkCode) + (1|itemNo),REML=TRUE)
+m0 <- update(m00, .~. + const)
+m0stats <- anova(m0)
+m0 <- update(m00, .~. + 1)
+m1 <- update(m0, .~. + scale)
+m1stats <- anova(m1)[nrow(anova(m1)),]
+m1a <- lmer(stresp~ scale + (1|MTurkCode) + (0 + scale|itemNo),REML=TRUE)
+#m1astats <- unlist(anova(m1,m1a)) 
+m2 <- update(m1, .~. + all)
+m2stats <- anova(m2)[nrow(anova(m2)),]
+m3 <- update(m2, .~. + all:scale)
+m3stats <- anova(m3)[nrow(anova(m3)),]
+m4 <- update(m2, .~. + one)
+m4stats <- anova(m4)[nrow(anova(m4)),]
+m5 <- update(m4, .~. + one:scale)
+m5stats <- anova(m5)[nrow(anova(m5)),]
+m6 <- update(m5, .~. + all:scale)
+m6stats <- anova(m6)[nrow(anova(m6)),]
+cicoef <- confint(m4,method="profile",quiet=TRUE)[7,]
+m7 <- update(m4, .~. + ni)
+m7stats <- anova(m7)[nrow(anova(m7)),]
+m8 <- update(m7, .~. + ni:scale)
+m8stats <- anova(m8)[nrow(anova(m8)),]
+@
+
+
+The results will be described in the order in which they were conducted. Variables were added to the model that predicted the standardized responses using just random variables for the participant and for the art piece. This baseline model did not include an intercept so assumed the overall mean was zero, which because of how the variables were standardized is the mid-point of the scales and the value expected if there was no bias. The first variable added was to estimate the intercept. This test (\hspace{-.5cm}\ref{rq:overall}) was non-significant: 
+$F(\Sexpr{m0stats$"NumDF"}, \Sexpr{sprintf("%2.2f",m0stats$"DenDF")})
+= \Sexpr{sprintf("%2.2f",m0stats$"F value")}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",m0stats$"Pr(>F)"))}$.
+This shows that there is no significant bias, overall, for the judgments. Next, the variable for which rating procedure was used (\hspace{-.5cm}\ref{rq:scale}) was entered and the means were not significantly different: 
+$F(\Sexpr{m1stats$"NumDF"}, \Sexpr{sprintf("%2.2f",m1stats$"DenDF")})
+= \Sexpr{sprintf("%2.2f",m1stats$"F value")}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",m1stats$"Pr(>F)"))}$. It is worth mentioning the differences in variances observed in Table~\ref{tab:means} are significantly different. Allowing different variances for the art pieces depending on the scale improved the fit: $\chi^2(2) = 60.98, p < .001.
+
+Next, a dummy variable for whether the participant rated all ten items or just a subset was entered into the model to test one of the study's main questions (\hspace{-.5cm}\ref{rq:somevall}). This effect was non-significant:
+$F(\Sexpr{m2stats$"NumDF"}, \Sexpr{sprintf("%2.2f",m2stats$"DenDF")})
+= \Sexpr{sprintf("%2.2f",m2stats$"F value")}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",m2stats$"Pr(>F)"))}$. The interaction between this variable and the rating procedure used (\hspace{-.5cm}\ref{rq:somevallbyscale}) was also non-significant: 
+$F(\Sexpr{m3stats$"NumDF"}, \Sexpr{sprintf("%2.2f",m3stats$"DenDF")})
+= \Sexpr{sprintf("%2.2f",m3stats$"F value")}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",m3stats$"Pr(>F)"))}$.
+
+The second main question (RQ 2) was whether adding a variable for whether the participant was rating just one item improved the fit of the model. It did:
+$F(\Sexpr{m4stats$"NumDF"}, \Sexpr{sprintf("%2.2f",m4stats$"DenDF")})
+= \Sexpr{sprintf("%2.2f",m4stats$"F value")}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",m4stats$"Pr(>F)"))}$.
+From Table~\ref{tab:means} the means when only make one rating are lower than when making multiple ratings. Given there are two critical research questions it is worth reporting the Holm adjusted $p$-value for this test: $p = \Sexpr{sub("^[0]+", "",sprintf("%0.3f", p.adjust(c(m2stats$"Pr(>F)",m4stats$"Pr(>F)"))[2]))}$.
+The coefficient estimate is: \Sexpr{sprintf("%2.2f",fixef(m4)[4])}, with a 95\% (using the likelihood profile) confidence interval of (\Sexpr{sprintf("%2.2f",cicoef[1])}, \Sexpr{sprintf("%2.2f",cicoef[2])}). Overall the standard deviation of the standardized response variable is: \Sexpr{sprintf("%2.2f",sd(data3$stresp))}, so this shift is \Sexpr{sprintf("%2.2f",(fixef(m4)[4])/sd(data3$stresp))} of a standard deviation. Using Cohen's (\citeyear{Cohen1992}) terminology this is a small effect ($.2\sigma$ is what he calls a \emph{small} effect), but it is still large enough to be of concern for some purposes. The interaction between this variable and the rating scale (\hspace{-.5cm}\ref{rq:onevrestbyscale}) was non-significant:
+$F(\Sexpr{m5stats$"NumDF"}, \Sexpr{sprintf("%2.2f",m5stats$"DenDF")})
+= \Sexpr{sprintf("%2.2f",m5stats$"F value")}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",m5stats$"Pr(>F)"))}$.
+
+The results thus far show that rating all ten was not significantly different than rating a subset, but that when rating just one item the scores were significantly lower. The next research question (\hspace{-.5cm}\ref{rq:numitems}) concerns whether the number of items to rate, from two to five, made a difference. Both linear and more flexible relationships were explored and none were significant. For the linear effect:
+$F(\Sexpr{m6stats$"NumDF"}, \Sexpr{sprintf("%2.2f",m6stats$"DenDF")})
+= \Sexpr{sprintf("%2.2f",m6stats$"F value")}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",m6stats$"Pr(>F)"))}$.
+The interaction between this linear effect and rating scale was also non-significant:
+$F(\Sexpr{m7stats$"NumDF"}, \Sexpr{sprintf("%2.2f",m7stats$"DenDF")})
+= \Sexpr{sprintf("%2.2f",m7stats$"F value")}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",m7stats$"Pr(>F)"))}$.
+
+<<demographicstestsage,echo=FALSE>>=
+suppressPackageStartupMessages(require(splines))
+m1 <- lmer(stresp~ scale + (1|MTurkCode) + (1|itemNo),
+           REML=FALSE,data=data3[is.na(data3$Q11.1)==FALSE,])
+m2 <- update(m1, .~. + bs(Q11.1))
+mainage <- anova(m1,m2)
+m3a <- update(m2, .~. + all)
+m3b <- update(m3a, .~. + bs(Q11.1):all)
+byallage <- anova(m3a,m3b)
+m3c <- update(m3a, .~. + one)
+m3d <- update(m3c, .~. + bs(Q11.1):one)
+byoneage <- anova(m3c,m3d)
+#mainage;byallage;byoneage #for checking
+@
+
+Finally, there is concern about the generalizability of all observed effects in the social and behavioral sciences. While future research is necessary for testing these findings across situations, the design of this study allows for testing if age, education level, and/or gender moderate this effect. Age was entered as a cubic spline, with one knot at the median, into the model with just the rating scale variable and did not significantly improve the fit: 
+$\chi^2(\Sexpr{mainage$"Chi Df"[2]}) = \Sexpr{sprintf("%2.2f",mainage$"Chisq"[2])}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",mainage$"Pr(>Chisq)"[2]))}$. Neither the interaction with rating a subset versus rating all ten 
+($\chi^2(\Sexpr{byallage$"Chi Df"[2]}) = \Sexpr{sprintf("%2.2f",byallage$"Chisq"[2])}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",byallage$"Pr(>Chisq)"[2]))}$)
+nor with rating one versus a multiple item subset
+($\chi^2(\Sexpr{byoneage$"Chi Df"[2]}) = \Sexpr{sprintf("%2.2f",byoneage$"Chisq"[2])}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",byoneage$"Pr(>Chisq)"[2]))}$)
+reached statistically significance.
+
+
+<<demographicstestseduc,echo=FALSE>>=
+data3$educ <- rep(NA,length(data3$Q11.2))
+data3$educ[data3$Q11.2%in%levels(data3$Q11.2)[c(5,6)]] <- "HS"
+data3$educ[data3$Q11.2%in%levels(data3$Q11.2)[c(2,9)]] <- "AssocSomeCollege"
+data3$educ[data3$Q11.2%in%levels(data3$Q11.2)[3]] <- "Bachelors"
+data3$educ[data3$Q11.2%in%levels(data3$Q11.2)[c(4,7,8)]] <- "Masters+"
+m1 <- lmer(stresp~ scale + (1|MTurkCode) + (1|itemNo),
+           REML=FALSE,data=data3[is.na(data3$educ)==FALSE,])
+m2 <- update(m1, .~. + educ)
+maineduc <- anova(m1,m2)
+m3a <- update(m2, .~. + all)
+m3b <- update(m3a, .~. + educ:all)
+byalleduc <- anova(m3a,m3b)
+m3c <- update(m3a, .~. + one)
+m3d <- update(m3c, .~. + educ:one)
+byoneeduc <- anova(m3c,m3d)
+#maineduc;byalleduc;byoneeduc #for checking
+@           
+
+
+<<demographicstestsgender,echo=FALSE>>=
+data3$gender <- rep(NA,length(data3$Q11.3))
+data3$gender[data3$Q11.3 == "Male"] <- "M"
+data3$gender[data3$Q11.3 == "Female"] <- "F"
+m1 <- lmer(stresp~ scale + (1|MTurkCode) + (1|itemNo),
+           REML=FALSE,data=data3[is.na(data3$gender)==FALSE,])
+m2  <- update(m1, .~. + gender)
+maingender <- anova(m1,m2)
+m3a <- update(m2, .~. + all)
+m3b <- update(m3a, .~. + gender:all)
+byallgender <- anova(m3a,m3b)
+m3c <- update(m3a, .~. + one)
+m3d <- update(m3c, .~. + gender:one)
+byonegender <- anova(m3c,m3d)
+#maingender;byallgender;byonegender
+@           
+
+The education variable was recoded into four categories: some or finishing high school; some college or an associates degree; bachelors degree; and higher degree. This was entered as a four-category nominal variable. The main effect of education level was non-significant:
+$\chi^2(\Sexpr{maineduc$"Chi Df"[2]}) = \Sexpr{sprintf("%2.2f",maineduc$"Chisq"[2])}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",maineduc$"Pr(>Chisq)"[2]))}$. The interactions with rating all ten: 
+$\chi^2(\Sexpr{byalleduc$"Chi Df"[2]}) = \Sexpr{sprintf("%2.2f",byalleduc$"Chisq"[2])}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",byalleduc$"Pr(>Chisq)"[2]))}$ and
+rating one versus a multiple item subset,
+$\chi^2(\Sexpr{byoneeduc$"Chi Df"[2]}) = \Sexpr{sprintf("%2.2f",byoneeduc$"Chisq"[2])}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",byoneeduc$"Pr(>Chisq)"[2]))}$, were also non-significant.
+Similarly for the gender variable (only those self-reporting as male or female are used in these analyses), there was no main effect of gender
+($\chi^2(\Sexpr{maingender$"Chi Df"[2]}) = \Sexpr{sprintf("%2.2f",maingender$"Chisq"[2])}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",maingender$"Pr(>Chisq)"[2]))}$)
+nor interactions by rating a subset versus all ten
+($\chi^2(\Sexpr{byallgender$"Chi Df"[2]}) = \Sexpr{sprintf("%2.2f",byallgender$"Chisq"[2])}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",byallgender$"Pr(>Chisq)"[2]))}$)
+or rating one versus a larger subset
+($\chi^2(\Sexpr{byonegender$"Chi Df"[2]}) = \Sexpr{sprintf("%2.2f",byonegender$"Chisq"[2])}, p = \Sexpr{sub("^[0]+", "",sprintf("%2.3f",byonegender$"Pr(>Chisq)"[2]))}$). The extremely high $p$-value (and the corresponding low $\chi^2$) was examined for the gender main effect. While the means are close (for females: \Sexpr{sprintf("%1.3f",tapply(data3$stresp,data3$gender,mean)[1])}, for males: \Sexpr{sprintf("%1.3f",tapply(data3$stresp,data3$gender,mean)[2])}), other approaches to estimate $p$ (e.g., Kenward-Roger approximation) also yielded high values.
+
+
+\section{Conclusion}
+
+The research set out to answer an applied question that also has important consequences for the science of how people make judgments. In many contexts survey and market researchers would like to present people with only a subset of items. Sometimes this is out of necessity because of the number of items is very large and there are concerns the fatigue would adversely affect response quality if all items were asked. In these cases random subsets can be presented, but other times interest is only with a specific subset of some larger superset so this nonrandom subset is used. If just asking for judgments for a non-random subset it would not be possible to determine if people's ratings of this subset were different from their views of the superset, or if judging a subset tended to produce ratings that were in general too high or too long. This research provides some reassurance that people are unbiased when rating a subset of items. Using a fairly large sample and two rating procedures, participants rating subsets of 2, 3, 4, and 5 items were not significantly different from those rating all ten. There was a small ($0.13\sigma$) decrease when rating only one piece of art. From an applied perspective, while further research across multiple contexts would be useful, the current research should not dissuade anyone from having people rate only a subset of items, providing the subset is larger than one item. 
+
+
+%\clearpage
+%\begin{multicols}{2}
+{\footnotesize{
+\bibliography{../AllRefs}
+}
+%\end{multicols}}
+
+
+\end{document}
